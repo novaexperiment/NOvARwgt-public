@@ -1,0 +1,144 @@
+FILE=TABLE
+PRODUCT=novarwgt
+VERSION=v1.0
+#
+#---------------------
+
+Group:
+
+
+Flavor     = ANY
+Qualifiers = "c2:debug:genie2"
+
+    Action = SetupDeps
+        # for building optional components
+        setupRequired(root      v6_12_06a -q +c2:+debug)
+        setupOptional(genie     v2_12_10b -q +c2:+debug)
+        setupOptional(nusimdata v1_13_00  -q +c2:+debug)
+        setupOptional(nutools   v2_22_01  -q +c2:+debug)
+
+Flavor     = ANY
+Qualifiers = "c2:prof:genie2"
+
+    Action = SetupDeps
+        # for building optional components
+        setupRequired(root      v6_12_06a -q +c2:+prof)
+        setupOptional(genie     v2_12_10b -q +c2:+prof)
+        setupOptional(nusimdata v1_13_00  -q +c2:+prof)
+        setupOptional(nutools   v2_22_01  -q +c2:+prof)
+
+Flavor     = ANY
+Qualifiers = "c2:debug:genie3"
+
+    Action = SetupDeps
+        # for building optional components
+        setupRequired(root      v6_16_00  -q +c2:+debug)
+        setupOptional(genie     v3_00_06_p01 -q +c2:+debug)
+        setupOptional(nusimdata v1_16_04  -q +c2:+debug)
+        setupOptional(nutools   v3_01_03  -q +c2:+debug)
+
+Flavor     = ANY
+Qualifiers = "c2:prof:genie3"
+
+    Action = SetupDeps
+        # for building optional components
+        setupRequired(root      v6_16_00  -q +c2:+prof)
+        setupOptional(genie     v3_00_06_p01 -q +c2:+prof)
+        setupOptional(nusimdata v1_16_04  -q +c2:+prof)
+        setupOptional(nutools   v3_01_03  -q +c2:+prof)
+
+Flavor     = ANY
+Qualifiers = "e15:prof:genie2"
+
+    Action = SetupDeps
+        # for building optional components
+        setupRequired(root      v6_12_06a -q +e15:+prof)
+        setupOptional(genie     v2_12_10b -q +e15:+prof)
+        setupOptional(nusimdata v1_13_00  -q +e15:+prof)
+        setupOptional(nutools   v2_22_01  -q +e15:+prof)
+
+Flavor     = ANY
+Qualifiers = "e15:debug:genie2"
+
+    Action = SetupDeps
+        # for building optional components
+        setupRequired(root      v6_12_06a -q +e15:+debug)
+        setupOptional(genie     v2_12_10b -q +e15:+debug)
+        setupOptional(nusimdata v1_13_00  -q +e15:+debug)
+        setupOptional(nutools   v2_22_01  -q +e15:+debug)
+
+Flavor     = ANY
+Qualifiers = "e15:prof:genie3"
+
+    Action = SetupDeps
+        # for building optional components
+        setupRequired(root      v6_12_06a -q +e15:+prof)
+        setupOptional(genie     v3_00_04  -q +e15:+prof)
+        setupOptional(nusimdata v1_16_01  -q +e15:+prof)
+        setupOptional(nutools   v2_28_02  -q +e15:+prof)
+
+Flavor     = ANY
+Qualifiers = "e15:debug:genie3"
+
+    Action = SetupDeps
+        # for building optional components
+        setupRequired(root      v6_12_06a -q +e15:+debug)
+        setupOptional(genie     v3_00_04  -q +e15:+debug)
+        setupOptional(nusimdata v1_16_01  -q +e15:+debug)
+        setupOptional(nutools   v2_28_02  -q +e15:+debug)
+
+Flavor     = ANY
+Qualifiers = "e17:debug:genie3"
+
+    Action = SetupDeps
+        # for building optional components
+        setupRequired(root      v6_16_00  -q +e17:+debug)
+        setupOptional(genie     v3_00_06_p01 -q +e17:+debug)
+        setupOptional(nusimdata v1_16_04  -q +e17:+debug)
+        setupOptional(nutools   v3_01_03  -q +e17:+debug)
+
+Flavor     = ANY
+Qualifiers = "e17:prof:genie3"
+
+    Action = SetupDeps
+        # for building optional components
+        setupRequired(root      v6_16_00  -q +e17:+prof)
+        setupOptional(genie     v3_00_06_p01 -q +e17:+prof)
+        setupOptional(nusimdata v1_16_04  -q +e17:+prof)
+        setupOptional(nutools   v3_01_03  -q +e17:+prof)
+
+Common:
+    # mostly cribbed from the NuSimData table file
+    Action = GetFQDir
+        # cetpkgsupport has the 'get-directory-name' tool used below
+        setupRequired(cetpkgsupport)
+        envSet( ${UPS_PROD_NAME_UC}_QUAL, `echo ${UPS_PROD_QUALIFIERS} | tr ':' '.'` )
+        if ( printenv ${UPS_PROD_NAME_UC}_SUBDIR > /dev/null )
+            envSet( ${UPS_PROD_NAME_UC}_SUBDIR, ${NOVARWGT_UPS_SUBDIR} )
+        else()
+            envSet( ${UPS_PROD_NAME_UC}_SUBDIR, `get-directory-name subdir` )
+        endif( printenv ${UPS_PROD_NAME_UC}_SUBDIR > /dev/null )
+        envSet( ${UPS_PROD_NAME_UC}_FQ_DIR, ${${UPS_PROD_NAME_UC}_DIR}/${${UPS_PROD_NAME_UC}_SUBDIR}.${${UPS_PROD_NAME_UC}_QUAL} )
+
+   Action = setup
+        prodDir()
+        setupEnv()
+
+        exeActionRequired(GetFQDir)
+
+        exeActionRequired(SetupDeps)
+
+        # set up the usual environment vars
+        EnvSet(${UPS_PROD_NAME_UC}_VERSION, ${UPS_PROD_VERSION} )
+        EnvSet(${UPS_PROD_NAME_UC}_DATA, ${${UPS_PROD_NAME_UC}_DIR}/data )
+        EnvSet(${UPS_PROD_NAME_UC}_INC, ${${UPS_PROD_NAME_UC}_DIR}/inc )
+        EnvSet(${UPS_PROD_NAME_UC}_LIB, ${${UPS_PROD_NAME_UC}_FQ_DIR}/lib)
+
+        # add our library dir to the search path
+        if ( test `uname` = "Darwin" )
+            pathPrepend(DYLD_LIBRARY_PATH, ${${UPS_PROD_NAME_UC}_LIB})
+        else()
+            pathPrepend(LD_LIBRARY_PATH, ${${UPS_PROD_NAME_UC}_LIB})
+        endif ( test `uname` = "Darwin" )
+
+End:
