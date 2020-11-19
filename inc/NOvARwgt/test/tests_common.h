@@ -16,7 +16,6 @@
 #include "NOvARwgt/rwgt/Tune.h"
 #include "NOvARwgt/rwgt/tunes/TunesSA.h"
 #include "NOvARwgt/rwgt/tunes/Tunes2018.h"
-#include "NOvARwgt/rwgt/tunes/Tunes2019.h"
 
 
 namespace novarwgt
@@ -537,30 +536,6 @@ namespace novarwgt
 			                   std::forward_as_tuple(ev, 0.41, &novarwgt::kCVTune2018_RPAfix, expWgts)
 			);
 
-
-			// CC DIS on C12, W < 1.7
-			// weights:  nonres 1pi (fixed version)
-			// (can't test this one with old version of novasoft so no syst weights)
-			ev = {};
-			ev.generator = novarwgt::kGENIE;
-			ev.generatorVersion = {2, 12, 2};
-			ev.nupdg = 14;
-			ev.isCC = true;
-			ev.reaction = novarwgt::kScDeepInelastic;
-			ev.struckNucl = 2112;
-			ev.A = 12;
-			ev.Enu = 1.33756;
-			ev.q = {0, 0, 0.932891, 0.605146};
-			ev.y = 0.452425;
-			ev.W = 1.23039;
-			ev.npiplus = 1;
-			ev.npiminus = 0;
-			ev.npizero = 0;
-			ev.genieWeights[novarwgt::kKnob_MaCCQE] = {nan, nan, 1, nan};
-			testEvents.emplace(std::piecewise_construct,
-			                   std::forward_as_tuple("numu-CCDIS-on-C12-lowW-fixed"),
-			                   std::forward_as_tuple(ev, 0.43, &novarwgt::kCVTune2019)
-			);
 
 			// CC DIS on C12, W > 1.7
 			// weights:  DIS norm
